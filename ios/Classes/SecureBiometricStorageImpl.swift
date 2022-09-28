@@ -109,7 +109,8 @@ class SecureBiometricStorageImpl {
         let context = LAContext()
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecUseAuthenticationContext as String] = context
-        query[kSecUseOperationPrompt as String] = "Unlock to access data"
+        // query[kSecUseOperationPrompt as String] = "Unlock to access data"
+         query[kSecUseOperationPrompt as String] = "Vui lòng quét vân tay để đăng nhập"
         query[kSecReturnAttributes as String] = true
         query[kSecReturnData as String] = true
         
@@ -156,7 +157,8 @@ class SecureBiometricStorageImpl {
         if (status == errSecSuccess) {
             UserDefaults.standard.removeObject(forKey: domainStatePrefix + name)
         } else {
-            handleOSStatusError(status, result, "writing data")
+            // handleOSStatusError(status, result, "writing data")
+            handleOSStatusError(status, result, "Đang xử lý lưu dữ liệu")
             return
         }
         result(true)
@@ -182,7 +184,8 @@ class SecureBiometricStorageImpl {
             query.merge([
                 kSecUseAuthenticationContext as String: context,
                 kSecAttrAccessControl as String: access,
-                kSecUseOperationPrompt as String: "Unlock to save data",
+                kSecUseOperationPrompt as String: "Vui lòng quét vân tay để tiếp tục",
+                // kSecUseOperationPrompt as String: "Unlock to save data",
             ]) { (_, new) in new }
         } else {
             hpdebug("No authentication required for \(name)")
@@ -204,7 +207,8 @@ class SecureBiometricStorageImpl {
                 UserDefaults.standard.setValue(state, forKey: domainStatePrefix + name)
             }
         }  else {
-            handleOSStatusError(status, result, "writing data")
+            // handleOSStatusError(status, result, "writing data")
+            handleOSStatusError(status, result, "Đang xử lý lưu dữ liệu")
             return
         }
         result(nil)
@@ -222,7 +226,8 @@ class SecureBiometricStorageImpl {
             }
             result(nil)
         } else {
-            handleOSStatusError(status, result, "deleting all data")
+            // handleOSStatusError(status, result, "deleting all data")
+            handleOSStatusError(status, result, "Đang xử lý xóa toàn bộ dữ liệu")
             return
         }
         
@@ -291,7 +296,8 @@ class SecureBiometricStorageImpl {
     private func canAuthenticate(result: @escaping StorageCallback) {
         let context = LAContext()
         if #available(iOS 10.0, OSX 10.12, *) {
-            context.localizedCancelTitle = "Checking auth support"
+            // context.localizedCancelTitle = "Checking auth support"
+            context.localizedCancelTitle = "Đang kiểm tra sinh trắc học"
         }
         var error: NSError?
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
